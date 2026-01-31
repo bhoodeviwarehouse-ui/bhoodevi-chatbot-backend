@@ -1,14 +1,9 @@
 {
-  "name": "bhoodevi-chatbot-backend",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
   "dependencies": {
-    "express": "^4.19.2",
-    "cors": "^2.8.5",
-    "openai": "^4.38.0"
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "openai": "^6.17.0"
   }
 }
