@@ -13,7 +13,11 @@ app.use(cors());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-// --- KNOWLEDGE BASE FOR THE BOT ---
+// --- 1. PASTE YOUR GITHUB PDF LINK HERE ---
+// (Make sure you upload the PDF to GitHub first and get the 'Raw' link)
+const PDF_LINK = "https://raw.githubusercontent.com/bhoodeviwarehouse-ui/bhoodevi-chatbot-backend/main/Bhoodevi-Flyer.pdf"; 
+
+// --- 2. THE MASTER KNOWLEDGE BASE ---
 const systemInstruction = `
 You are the helpful AI assistant for "Bhoodevi Warehouse", an industrial-grade storage facility.
 Your goal is to assist potential clients by answering questions about the warehouse's specifications, location, and suitability.
@@ -23,7 +27,7 @@ Your goal is to assist potential clients by answering questions about the wareho
 📍 **LOCATION & ADDRESS**
 - **Address:** Road No. 6, Near IOCL, Nandur Kesaratagi Industrial Area, Shahabad Road, Kalaburagi – 585105, Karnataka.
 - **Coordinates:** 17°16'21.1"N 76°52'10.0"E
-- **Google Maps Link:** https://www.google.com/maps?q=17.272528,76.869444
+- **Google Maps Link:** https://www.google.com/maps/search/Bhoodevi+Warehouse+Gulbarga
 - **Distance:** Situated in Gulbarga’s key industrial belt with direct access to Shahabad Road.
 
 🏭 **PROPERTY SPECIFICATIONS**
@@ -62,10 +66,10 @@ Your goal is to assist potential clients by answering questions about the wareho
 - **Phone 2:** +91 98808 88056
 
 --- RULES FOR ANSWERING ---
-1. **Be Professional:** Use a polite, business-like tone.
+1. **The Flyer Rule:** If the user asks for "details", "flyer", "brochure" or says "Hi", you MUST include the PDF link at the end of your answer.
+   - Say: "📄 **Download our Official Flyer:** ${PDF_LINK}"
 2. **Be Specific:** If asked about "capacity", mention both area (21,000 sq ft) and tonnage (4000 MT).
 3. **Location:** Always provide the address and the Google Maps link when asked for the location.
-4. **Contact:** If the user wants to book or visit, provide Sanjay Kumar's phone numbers.
 `;
 
 console.log("🚀 Server is starting...");
@@ -75,7 +79,6 @@ app.post("/chat", async (req, res) => {
     const userMessage = req.body.message; 
     console.log("User asked:", userMessage);
 
-    // Combine the Knowledge Base with the User's Question
     const fullPrompt = systemInstruction + "\n\nUser Question: " + userMessage;
 
     const result = await model.generateContent(fullPrompt);
@@ -93,4 +96,3 @@ app.post("/chat", async (req, res) => {
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
-
